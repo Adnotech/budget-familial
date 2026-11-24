@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0f7b6c"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="config.js"></script><title>تسيير الميزانية المنزلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f3;--sf:#fff;--ink:#16302b;--mu:#5d6f6a;--ln:#dbe3de;--ac:#0f7b6c;--ac2:#e0a526;--bad:#c2410c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b18;--sf:#182723;--ink:#e8f0ec;--mu:#9bb0a9;--ln:#2a3d38;--ac:#3fbfa9;--ac2:#f0bc45;--bad:#fb923c}}
+:root[data-theme="dark"]{--bg:#0f1b18;--sf:#182723;--ink:#e8f0ec;--mu:#9bb0a9;--ln:#2a3d38;--ac:#3fbfa9;--ac2:#f0bc45;--bad:#fb923c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Tajawal,system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+main{max-width:640px;margin:0 auto;padding:12px 14px 40px}
+h1{font-size:20px;margin:6px 0 10px}.brand{display:flex;align-items:center;gap:10px}.brand img{width:40px;height:40px;border-radius:50%;flex:none}h2{font-size:17px;margin:22px 0 8px}
+.lang{display:flex;gap:6px;margin-bottom:8px}
+button{font:inherit;cursor:pointer;border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:8px;padding:6px 12px}
+button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tabs{display:flex;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:6px 0;z-index:5}
+.tabs button{flex:1;padding:10px 4px;font-weight:700}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.c{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px}
+.c small{color:var(--mu);display:block}.c b{font-size:18px}
+.big{grid-column:1/-1;border-inline-start:5px solid var(--ac)}
+.neg{color:var(--bad)}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}td,th{padding:7px 6px;border-bottom:1px solid var(--ln);text-align:start}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px}
+.donut{width:170px;height:170px;border-radius:50%;margin:12px auto;position:relative}
+.donut::after{content:"";position:absolute;inset:36px;background:var(--bg);border-radius:50%}
+label{display:block;margin:10px 0 3px;color:var(--mu);font-size:14px}
+input{width:100%;font:inherit;padding:10px;border:1px solid var(--ln);border-radius:8px;background:var(--sf);color:var(--ink)}
+.rem{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);background:var(--ac);color:#fff;border-radius:10px;padding:10px 14px;margin-top:16px;font-weight:700;display:flex;justify-content:space-between}
+.rem.neg{background:var(--bad);color:#fff}
+ul{padding-inline-start:20px;margin:6px 0}li{margin:5px 0}
+.p{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin:10px 0}
+.mu{color:var(--mu)}
+.auth{max-width:420px;margin:14px auto}.gb{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px;font-weight:700}.sep{text-align:center;color:var(--mu);margin:14px 0}.err{color:var(--bad);min-height:1.4em;margin:8px 0}.okm{color:var(--ac)}.lnk{background:none;border:0;color:var(--ac);text-decoration:underline;padding:4px}
+</style></head><body><main id="app"></main>
+<script>
+let U=null,AM="in",BUSY=false,CHK=true,READY=false,RECOV=false,LU=null,PEND=null;
+const K=["veg","groc","meat","tel","school","cloth","fun","trip","car","sav","savp","debt"];
+const COL=["#2f9e6e","#e0a526","#c2603a","#3b82c4","#7c5cc4","#d6578f","#18a5a5","#8a9a2b","#6b7280","#0f7b6c","#b7791f","#b4372b"];
+const T={
+ar:{t:"تسيير الميزانية المنزلية",tb:"Tableau de Bord",in:"إدخال البيانات",pj:"المشاريع",i1:"الدخل الشهري للعامل",i2:"الدخل الثانوي الشهري",mo:"شهري",yr:"سنوي",tot:"إجمالي الدخل",ex:"مجموع المستلزمات",rm:"الدخل المتبقي",am:"المبلغ",pc:"النسبة",cur:"العملة",
+cat:{veg:"الخضر والفاكهة",groc:"المواد الغذائية",meat:"اللحوم والأسماك",tel:"الهاتف والإنترنت",school:"المستحقات المدرسية",cloth:"لباس الأولاد",fun:"الترفيه",trip:"السفر",car:"مستلزمات السيارة",sav:"الادخار",savp:"الادخار لمشروع",debt:"الديون"},
+nm:"اسم المشروع",av:"المبلغ المتوفر حالياً",tg:"تاريخ الهدف (اختياري)",pri:"الأولوية",lv:["عالية","متوسطة","منخفضة"],rmn:"المتبقي",cmp:"مقارنة الأشهر",best:"أفضل شهر (أعلى متبقٍ)",lowE:"أقل نفقة",hiI:"أعلى دخل",ned:"أدخل بيانات شهرين على الأقل لتحديد الأفضل.",ed:"تعديل",ok2:"حفظ التعديلات",cn:"إلغاء",eta:"تاريخ الإنجاز المتوقع",prg:"نسبة التقدم",rq:"المبلغ الشهري المطلوب للهدف",ls:"استمع للملخص",st:"إيقاف",sp:"سرعة القراءة",top:"أكبر فئات الإنفاق",dfc:"حالة الميزانية: عجز",sur:"حالة الميزانية: فائض",bal:"حالة الميزانية: متوازنة",dc:"نصائح التطبيق عامة وتعليمية، وليست مشورة مالية أو قانونية أو استثمارية. الأرقام تُحسب بدقة داخل التطبيق.",co:"تكلفة المشروع",mn:"المبلغ الشهري المخصص (اختياري)",add:"إضافة المشروع",del:"حذف",dur:"المدة اللازمة",m:"شهر",y:"سنة",ana:"القراءة الأوتوماتيكية",sn:"حفظ هذا الشهر للمقارنة",np:"لا توجد مشاريع بعد. أضف مشروعك الأول من واجهة المشاريع.",nd:"أدخل بياناتك أولاً في واجهة إدخال البيانات."},
+fr:{t:"Gestion du budget familial",tb:"Tableau de Bord",in:"Saisie des données",pj:"Projets",i1:"Revenu mensuel du travailleur",i2:"Revenu secondaire mensuel",mo:"Mensuel",yr:"Annuel",tot:"Revenu total",ex:"Total des dépenses",rm:"Reste du mois",am:"Montant",pc:"Part",cur:"Devise",
+cat:{veg:"Fruits et légumes",groc:"Produits alimentaires",meat:"Viandes et poissons",tel:"Téléphone et internet",school:"Scolarité des enfants",cloth:"Vêtements des enfants",fun:"Loisirs",trip:"Voyages",car:"Voiture",sav:"Épargne",savp:"Épargne pour un projet",debt:"Dettes"},
+nm:"Nom du projet",av:"Montant déjà disponible",tg:"Date cible (facultatif)",pri:"Priorité",lv:["Haute","Moyenne","Basse"],rmn:"Reste à financer",cmp:"Comparaison des mois",best:"Meilleur mois (reste le plus élevé)",lowE:"Dépenses les plus basses",hiI:"Revenu le plus élevé",ned:"Saisissez au moins deux mois pour désigner le meilleur.",ed:"Modifier",ok2:"Enregistrer les modifications",cn:"Annuler",eta:"Date d’achèvement prévue",prg:"Progression",rq:"Mensualité requise pour la date cible",ls:"Écouter le résumé",st:"Arrêter",sp:"Vitesse de lecture",top:"Principaux postes de dépense",dfc:"État du budget : déficit",sur:"État du budget : excédent",bal:"État du budget : équilibré",dc:"Les conseils sont généraux et pédagogiques, pas un avis financier, juridique ou d’investissement. Les montants sont calculés précisément dans l’application.",co:"Coût du projet",mn:"Montant mensuel alloué (facultatif)",add:"Ajouter le projet",del:"Supprimer",dur:"Durée nécessaire",m:"mois",y:"an(s)",ana:"Lecture automatique",sn:"Enregistrer ce mois pour comparer",np:"Aucun projet pour l’instant. Ajoutez le premier dans l’onglet Projets.",nd:"Saisissez d’abord vos données dans l’onglet Saisie."},
+en:{t:"Household Budget",tb:"Dashboard",in:"Data entry",pj:"Projects",i1:"Worker’s monthly income",i2:"Secondary monthly income",mo:"Monthly",yr:"Yearly",tot:"Total income",ex:"Total expenses",rm:"Left this month",am:"Amount",pc:"Share",cur:"Currency",
+cat:{veg:"Fruits & vegetables",groc:"Groceries",meat:"Meat & fish",tel:"Phone & internet",school:"Children’s school",cloth:"Children’s clothes",fun:"Entertainment",trip:"Travel",car:"Car",sav:"Savings",savp:"Project savings",debt:"Debts"},
+nm:"Project name",av:"Amount already saved",tg:"Target date (optional)",pri:"Priority",lv:["High","Medium","Low"],rmn:"Left to fund",cmp:"Month comparison",best:"Best month (highest left over)",lowE:"Lowest spending",hiI:"Highest income",ned:"Enter at least two months to find the best one.",ed:"Edit",ok2:"Save changes",cn:"Cancel",eta:"Expected completion",prg:"Progress",rq:"Monthly amount needed for the target",ls:"Listen to summary",st:"Stop",sp:"Reading speed",top:"Top spending categories",dfc:"Budget status: deficit",sur:"Budget status: surplus",bal:"Budget status: balanced",dc:"Tips are general and educational, not financial, legal or investment advice. Amounts are computed precisely inside the app.",co:"Project cost",mn:"Monthly amount set aside (optional)",add:"Add project",del:"Delete",dur:"Time needed",m:"months",y:"years",ana:"Automatic review",sn:"Save this month for comparison",np:"No projects yet. Add your first one in the Projects tab.",nd:"Enter your data first in the Data entry tab."}};
+const A={
+ar:{pw:"المبلغ الشهري {x} أكبر من المتبقي بعد المصروفات ({y}).",neg:"مصاريفك تتجاوز دخلك بـ {x}. ابدأ بتقليص الترفيه والسفر قبل أي بند أساسي.",food:"الغذاء يأخذ {x}% من الدخل (الأفضل أقل من 35%). خطط قائمة مشتريات أسبوعية وقلل الهدر.",tel:"الهاتف والإنترنت {x}% من الدخل. قارن العروض واختر باقة أنسب.",fun:"الترفيه {x}% من الدخل، والمستحسن حتى 10%. حدد سقفاً شهرياً.",sav:"ادخارك {x}% فقط. حاول الوصول إلى 10% على الأقل، وخصصه تلقائياً أول الشهر.",debt:"الديون {x}% من الدخل (الحد الآمن نحو 30%). سدد الأعلى فائدة أولاً.",up:"{c} ارتفع {x}% مقارنة بالشهر المحفوظ.",ok:"توزيع ميزانيتك متوازن. حافظ عليه واحفظ هذا الشهر للمقارنة لاحقاً.",p0:"لا يوجد مبلغ شهري متاح. خصص مبلغاً للمشروع أو قلل مصروفاً آخر.",pl:"المدة طويلة (أكثر من 5 سنوات). فكر في تقسيم المشروع إلى مراحل أو رفع المبلغ الشهري.",ps:"مشروع قريب المنال، التزم بالمبلغ الشهري.",pm:"مدة معقولة مع انتظام في الادخار.",pc:"تقليص الترفيه والسفر بـ 10% يوفر {x} شهرياً ويخفض المدة إلى {y} شهراً."},
+fr:{pw:"La mensualité de {x} dépasse le reste après dépenses ({y}).",neg:"Vos dépenses dépassent vos revenus de {x}. Réduisez d’abord loisirs et voyages avant les postes essentiels.",food:"L’alimentation pèse {x}% du revenu (idéal : moins de 35%). Planifiez une liste de courses hebdomadaire et limitez le gaspillage.",tel:"Téléphone et internet : {x}% du revenu. Comparez les offres et choisissez un forfait adapté.",fun:"Les loisirs représentent {x}% du revenu, visez 10% au plus. Fixez un plafond mensuel.",sav:"Vous n’épargnez que {x}%. Visez au moins 10%, en virement automatique en début de mois.",debt:"Les dettes pèsent {x}% du revenu (seuil prudent : environ 30%). Remboursez d’abord les plus coûteuses.",up:"{c} a augmenté de {x}% par rapport au mois enregistré.",ok:"Votre budget est bien réparti. Enregistrez ce mois pour le comparer plus tard.",p0:"Aucun montant mensuel disponible. Allouez une somme au projet ou réduisez une autre dépense.",pl:"Durée longue (plus de 5 ans). Envisagez de découper le projet en étapes ou d’augmenter la mensualité.",ps:"Projet à portée de main, tenez votre mensualité.",pm:"Durée raisonnable avec une épargne régulière.",pc:"Réduire loisirs et voyages de 10% dégage {x} par mois et ramène la durée à {y} mois."},
+en:{pw:"The monthly amount {x} exceeds what is left after expenses ({y}).",neg:"Your spending exceeds your income by {x}. Cut entertainment and travel before essentials.",food:"Food takes {x}% of income (aim below 35%). Plan a weekly shopping list and cut waste.",tel:"Phone and internet are {x}% of income. Compare plans and pick a cheaper one.",fun:"Entertainment is {x}% of income; aim for 10% at most. Set a monthly cap.",sav:"You save only {x}%. Aim for at least 10%, set to move automatically at the start of the month.",debt:"Debts take {x}% of income (safe limit about 30%). Pay the costliest first.",up:"{c} rose {x}% versus the saved month.",ok:"Your budget looks balanced. Save this month to compare against later.",p0:"No monthly amount is available. Set aside money for this project or trim another expense.",pl:"Long timeline (over 5 years). Consider splitting the project into stages or raising the monthly amount.",ps:"Within reach; keep up your monthly amount.",pm:"A reasonable timeline with regular saving.",pc:"Cutting entertainment and travel by 10% frees {x} a month and shortens it to {y} months."}};
+let S={lang:"ar",tab:0,cur:"DA",inc:[0,0],v:{},pr:[],h:null};
+
+const $=s=>document.querySelector(s),n=x=>+x||0,t=()=>T[S.lang],a=()=>A[S.lang];
+const sv=()=>{S.H=S.H||{};if(S.mo)S.H[S.mo]={inc:[...S.inc],v:{...S.v}};if(U)try{localStorage.setItem("budget:"+U.id,JSON.stringify(S))}catch(e){}push()};
+const fm=x=>Math.round(x).toLocaleString(S.lang==="ar"?"ar-u-nu-latn":S.lang)+" "+esc(S.cur);
+const I=()=>n(S.inc[0])+n(S.inc[1]),E=()=>K.reduce((s,k)=>s+n(S.v[k]),0),R=()=>I()-E();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const f=(s,o)=>s.replace(/\{(\w)\}/g,(_,k)=>o[k]);
+function dur(c,mn){const m=Math.ceil(c/mn),y=Math.floor(m/12),r=m%12,d=t();return(y?y+" "+d.y+" ":"")+(r||!y?r+" "+d.m:"")}
+function analysis(){const i=I(),e=E(),o=[];if(!i)return[t().nd];
+if(e>i)o.push(f(a().neg,{x:fm(e-i)}));
+const p=k=>Math.round(100*n(S.v[k])/i),fd=p("veg")+p("groc")+p("meat");
+if(fd>35)o.push(f(a().food,{x:fd}));if(p("tel")>6)o.push(f(a().tel,{x:p("tel")}));if(p("fun")>10)o.push(f(a().fun,{x:p("fun")}));
+if(p("sav")+p("savp")<10)o.push(f(a().sav,{x:p("sav")+p("savp")}));if(p("debt")>30)o.push(f(a().debt,{x:p("debt")}));
+if(S.h)K.forEach(k=>{const b=n(S.h.v[k]),c=n(S.v[k]);if(b>0&&c>b*1.15)o.push(f(a().up,{c:t().cat[k],x:Math.round(100*(c-b)/b)}))});
+if(!o.length)o.push(a().ok);return o}
+function pAdv(p){const r=R(),u=n(p.m)||Math.max(r,0),o=[];if(u<=0)return[a().p0];
+const m=Math.ceil(p.c/u);o.push(m>60?a().pl:m<=12?a().ps:a().pm);
+const x=0.1*(n(S.v.fun)+n(S.v.trip));if(x>0)o.push(f(a().pc,{x:fm(x),y:Math.ceil(p.c/(u+x))}));return o}
+function nav(){const d=t();return`<div class="lang">${["ar","fr","en"].map(l=>`<button class="${S.lang===l?"on":""}" onclick="S.lang='${l}';render()">${{ar:"العربية",fr:"Français",en:"English"}[l]}</button>`).join("")}</div><h1 class="brand"><img src="icons/icon-192.png" alt="" width="40" height="40">${d.t}</h1><div class="tabs">${[d.tb,d.in,d.pj].map((x,i)=>`<button class="${S.tab===i?"on":""}" onclick="S.tab=${i};render()">${x}</button>`).join("")}</div>`}
+function dash(){const d=t(),i=I(),e=E(),r=R(),i1=n(S.inc[0]),i2=n(S.inc[1]);
+const card=(l,v,c)=>`<div class="c ${c||""}"><small>${l}</small><b>${fm(v)}</b></div>`;
+let ang=0,seg=[];K.forEach((k,j)=>{const v=n(S.v[k]);if(v>0&&e>0){const s=ang,en=ang+360*v/e;seg.push(`${COL[j]} ${s}deg ${en}deg`);ang=en}});
+const rows=K.map((k,j)=>{const v=n(S.v[k]);return`<tr><td><span class="dot" style="background:${COL[j]}"></span>${d.cat[k]}</td><td>${fm(v)}</td><td>${i?Math.round(1000*v/i)/10:0}%</td><td>${fm(v*12)}</td></tr>`}).join("");
+return`<h2>${d.tot}</h2><div class="g">${card(d.i1+" · "+d.mo,i1)}${card(d.i1+" · "+d.yr,i1*12)}${card(d.i2+" · "+d.mo,i2)}${card(d.i2+" · "+d.yr,i2*12)}${card(d.ex,e)}${card(d.rm,r,"big"+(r<0?" neg":""))}</div>
+<h2>${d.ex}</h2>${e>0?`<div class="donut" style="background:conic-gradient(${seg.join(",")})"></div>`:""}<div class="wrap"><table><tr><th></th><th>${d.am}</th><th>${d.pc}</th><th>${d.yr}</th></tr>${rows}</table></div>
+<h2>${d.pj}</h2>${S.pr.length?S.pr.map(p=>`<div class="c" style="margin:6px 0"><b>${esc(p.n)}</b> <span class="mu">${fm(p.c)}</span></div>`).join(""):`<p class="mu">${d.np}</p>`}
+<h2>${d.ana}</h2><ul>${analysis().map(x=>`<li>${x}</li>`).join("")}</ul><button onclick="S.h={v:{...S.v}};render()">${d.sn}</button>`}
+function upd(){const r=R(),el=$("#rem");if(el){el.className="rem"+(r<0?" neg":"");el.lastElementChild.textContent=fm(r)}}
+function inp(){const d=t(),fld=(l,val,h)=>`<label>${l}</label><input type="number" inputmode="decimal" min="0" value="${val||""}" oninput="${h}">`;
+return`<h2>${d.tot}</h2>${fld(d.i1,S.inc[0],"S.inc[0]=n(this.value);sv();upd()")}${fld(d.i2,S.inc[1],"S.inc[1]=n(this.value);sv();upd()")}<label>${d.cur}</label><input value="${esc(S.cur)}" oninput="S.cur=this.value;sv()" onchange="render()"><h2>${d.ex}</h2>${K.map(k=>fld(d.cat[k],S.v[k],`S.v['${k}']=n(this.value);sv();upd()`)).join("")}<div class="rem" id="rem"><span>${d.rm}</span><span>${fm(R())}</span></div>`.replace('class="rem" id="rem"','class="rem'+(R()<0?" neg":"")+'" id="rem"')}
+function prj(){const d=t(),r=R();
+return`<h2>${d.pj}</h2><label>${d.nm}</label><input id="pn"><label>${d.co}</label><input id="pc" type="number" inputmode="decimal" min="0"><label>${d.mn}</label><input id="pm" type="number" inputmode="decimal" min="0"><p><button class="on" onclick="addP()">${d.add}</button></p>`+S.pr.map((p,j)=>{const u=n(p.m)||Math.max(r,0);return`<div class="p"><b>${esc(p.n)}</b> <button style="float:inline-end" onclick="S.pr.splice(${j},1);render()">${d.del}</button><div>${d.co}: ${fm(p.c)}</div>${u>0?`<div>${d.mn.split(" (")[0]}: ${fm(u)}</div><div>${d.dur}: <b>${dur(p.c,u)}</b></div>`:""}<ul>${pAdv(p).map(x=>`<li>${x}</li>`).join("")}</ul></div>`}).join("")}
+function addP(){const c=n($("#pc").value),nm=$("#pn").value.trim();if(!nm||c<=0)return;S.pr.push({n:nm,c:c,m:n($("#pm").value)});render()}
+function render(){document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";document.title=t().t;$("#app").innerHTML=nav()+[dash,inp,prj][S.tab]();sv()}
+const OL=(p)=>S.lang==="ar"?"ar-u-nu-latn":S.lang;
+function calc(p){const rem=Math.max(p.c-n(p.a),0),u=n(p.m)||Math.max(R(),0),m=u>0?Math.ceil(rem/u):0;return{rem,u,m,pct:p.c?Math.round(1e4*n(p.a)/p.c)/100:0}}
+function pAdv(p){const q=calc(p),o=[];if(q.u<=0)return[a().p0];if(q.rem===0)return o;o.push(q.m>60?a().pl:q.m<=12?a().ps:a().pm);if(q.u>R())o.push(f(a().pw,{x:fm(q.u),y:fm(R())}));const x=.1*(n(S.v.fun)+n(S.v.trip));if(x>0)o.push(f(a().pc,{x:fm(x),y:Math.ceil(q.rem/(q.u+x))}));return o}
+function prj(){const d=t(),L=d.lv,fl=(l,id,ty)=>`<label>${l}</label><input id="${id}" type="${ty||"number"}" inputmode="decimal" min="0">`;
+return`<h2>${d.pj}</h2>${fl(d.nm,"pn","text")}${fl(d.co,"pc")}${fl(d.av,"pa")}${fl(d.mn,"pm")}${fl(d.tg,"pt","date")}<label>${d.pri}</label><select id="pp" style="font:inherit;padding:8px;border-radius:8px;background:var(--sf);color:var(--ink)">${L.map((x,i)=>`<option value="${i}">${x}</option>`).join("")}</select><p><button class="on" onclick="addP()">${d.add}</button></p>`+S.pr.map((p,j)=>{const q=calc(p),dt=new Date();dt.setMonth(dt.getMonth()+q.m);let rq="";if(p.t&&q.rem>0){const mm=Math.max(1,Math.round((new Date(p.t)-new Date())/2.63e9));rq=`<div>${d.rq}: <b>${fm(q.rem/mm)}</b></div>`}
+return`<div class="p"><b>${esc(p.n)}</b> <span class="mu">(${L[p.p||0]})</span><button style="float:inline-end" onclick="S.pr.splice(${j},1);render()">${d.del}</button><div>${d.co}: ${fm(p.c)} · ${d.rmn}: ${fm(q.rem)}</div><div style="background:var(--ln);border-radius:6px;height:8px;margin:6px 0"><div style="width:${Math.min(q.pct,100)}%;height:8px;border-radius:6px;background:var(--ac)"></div></div><div>${d.prg}: ${q.pct}%</div>${q.u>0&&q.rem>0?`<div>${d.mn.split(" (")[0]}: ${fm(q.u)}</div><div>${d.dur}: <b>${dur(q.rem,q.u)}</b></div><div>${d.eta}: <b>${dt.toLocaleDateString(OL())}</b></div>`:""}${rq}<ul>${pAdv(p).map(x=>`<li>${x}</li>`).join("")}</ul></div>`}).join("")}
+function addP(){const c=n($("#pc").value),nm=$("#pn").value.trim();if(!nm||c<=0)return;S.pr.push({n:nm,c:c,a:n($("#pa").value),m:n($("#pm").value),t:$("#pt").value,p:+$("#pp").value});render()}
+function say(){if(!window.speechSynthesis)return;speechSynthesis.cancel();const d=t(),i=I(),e=E(),r=R(),tp=K.map(k=>[k,n(S.v[k])]).filter(x=>x[1]>0).sort((x,y)=>y[1]-x[1]).slice(0,3).map(x=>d.cat[x[0]]).join(", ");
+const tx=`${d.tot}: ${fm(i)}. ${d.yr}: ${fm(i*12)}. ${d.ex}: ${fm(e)}. ${d.rm}: ${fm(r)}. ${tp?d.top+": "+tp+". ":""}${r<0?d.dfc:r>0?d.sur:d.bal}. `+S.pr.map(p=>`${p.n}: ${calc(p).pct}%`).join(". ")+". "+analysis().slice(0,2).join(". ");
+const u=new SpeechSynthesisUtterance(tx);u.lang={ar:"ar-SA",fr:"fr-FR",en:"en-US"}[S.lang];u.rate=S.rate||1;speechSynthesis.speak(u)}
+const voice=()=>{const d=t();return`<h2>${d.ls}</h2><button class="on" onclick="say()">${d.ls}</button> <button onclick="window.speechSynthesis&&speechSynthesis.cancel()">${d.st}</button><label>${d.sp}</label><select style="font:inherit;padding:8px;border-radius:8px;background:var(--sf);color:var(--ink)" onchange="S.rate=+this.value;sv()">${[.8,1,1.25].map(x=>`<option value="${x}" ${(S.rate||1)===x?"selected":""}>×${x}</option>`).join("")}</select>`};
+const warn=()=>I()>0&&E()>I()?`<div class="p neg"><b>⚠ ${f(a().neg,{x:fm(E()-I())})}</b></div>`:"";
+const _d=dash;dash=()=>warn()+_d()+voice()+`<p class="mu">${t().dc}</p>`;
+S.mo=S.mo||new Date().toISOString().slice(0,7);S.ed=null;
+const mn=k=>new Date(k+"-15").toLocaleDateString(OL(),{month:"long",year:"numeric"});
+const tI=h=>n(h.inc[0])+n(h.inc[1]),tE=h=>K.reduce((s,k)=>s+n(h.v[k]),0);
+function setMo(k){if(!k)return;sv();S.mo=k;const h=(S.H||{})[k];S.inc=h?[...h.inc]:[0,0];S.v=h?{...h.v}:{};render()}
+function cmpH(){const d=t();sv();const H=S.H,ks=Object.keys(H).filter(k=>tI(H[k])>0||tE(H[k])>0).sort();if(!ks.length)return"";
+const mx=Math.max(...ks.map(k=>Math.max(tI(H[k]),tE(H[k])))),rs=ks.map(k=>tI(H[k])-tE(H[k])),bi=rs.indexOf(Math.max(...rs)),many=ks.length>1,
+lo=ks.reduce((b,k)=>tE(H[k])<tE(H[b])?k:b),hi=ks.reduce((b,k)=>tI(H[k])>tI(H[b])?k:b),
+bar=(v,c)=>`<div style="display:flex;align-items:center;gap:6px"><div style="height:12px;border-radius:6px;background:${c};width:${Math.max(2,Math.round(70*v/mx))}%"></div><small>${fm(v)}</small></div>`;
+return`<h2>${d.cmp}</h2>`+ks.map((k,i)=>`<div class="p" style="margin:6px 0;${i===bi&&many?"border:2px solid var(--ac2)":""}"><b>${i===bi&&many?"★ ":""}${mn(k)}</b>${bar(tI(H[k]),"var(--ac)")}${bar(tE(H[k]),"var(--bad)")}</div>`).join("")+`<small class="mu"><span class="dot" style="background:var(--ac)"></span>${d.tot} <span class="dot" style="background:var(--bad)"></span>${d.ex}</small>`+(many?`<ul><li>★ ${d.best}: <b>${mn(ks[bi])}</b> (${d.rm}: ${fm(rs[bi])})</li><li>${d.lowE}: <b>${mn(lo)}</b> (${fm(tE(H[lo]))})</li><li>${d.hiI}: <b>${mn(hi)}</b> (${fm(tI(H[hi]))})</li></ul>`:`<p class="mu">${d.ned}</p>`)}
+function prj(){const d=t(),L=d.lv,e=S.ed!=null?S.pr[S.ed]:null,fl=(l,id,ty,v)=>`<label>${l}</label><input id="${id}" type="${ty||"number"}" inputmode="decimal" min="0" value="${v?esc(v):""}">`;
+return`<h2>${d.pj}</h2>${fl(d.nm,"pn","text",e&&e.n)}${fl(d.co,"pc","",e&&e.c)}${fl(d.av,"pa","",e&&e.a)}${fl(d.mn,"pm","",e&&e.m)}${fl(d.tg,"pt","date",e&&e.t)}<label>${d.pri}</label><select id="pp" style="font:inherit;padding:8px;border-radius:8px;background:var(--sf);color:var(--ink)">${L.map((x,i)=>`<option value="${i}" ${e&&e.p===i?"selected":""}>${x}</option>`).join("")}</select><p><button class="on" onclick="addP()">${e?d.ok2:d.add}</button>${e?` <button onclick="S.ed=null;render()">${d.cn}</button>`:""}</p>`+S.pr.map((p,j)=>{const q=calc(p),dt=new Date();dt.setMonth(dt.getMonth()+q.m);let rq="";if(p.t&&q.rem>0){const mm=Math.max(1,Math.round((new Date(p.t)-new Date())/2.63e9));rq=`<div>${d.rq}: <b>${fm(q.rem/mm)}</b></div>`}
+return`<div class="p" style="${S.ed===j?"border:2px solid var(--ac)":""}"><b>${esc(p.n)}</b> <span class="mu">(${L[p.p||0]})</span><span style="float:inline-end"><button onclick="S.ed=${j};render();scrollTo(0,0)">${d.ed}</button> <button onclick="S.ed=null;S.pr.splice(${j},1);render()">${d.del}</button></span><div>${d.co}: ${fm(p.c)} · ${d.rmn}: ${fm(q.rem)}</div><div style="background:var(--ln);border-radius:6px;height:8px;margin:6px 0"><div style="width:${Math.min(q.pct,100)}%;height:8px;border-radius:6px;background:var(--ac)"></div></div><div>${d.prg}: ${q.pct}%</div>${q.u>0&&q.rem>0?`<div>${d.mn.split(" (")[0]}: ${fm(q.u)}</div><div>${d.dur}: <b>${dur(q.rem,q.u)}</b></div><div>${d.eta}: <b>${dt.toLocaleDateString(OL())}</b></div>`:""}${rq}<ul>${pAdv(p).map(x=>`<li>${x}</li>`).join("")}</ul></div>`}).join("")}
+function addP(){const c=n($("#pc").value),nm=$("#pn").value.trim();if(!nm||c<=0)return;const o={n:nm,c:c,a:n($("#pa").value),m:n($("#pm").value),t:$("#pt").value,p:+$("#pp").value};if(S.ed!=null){S.pr[S.ed]=o;S.ed=null}else S.pr.push(o);render()}
+const _n=nav;nav=()=>_n()+`<div class="c" style="margin:8px 0;display:flex;gap:8px;align-items:center;justify-content:space-between"><b>📅 ${mn(S.mo)}</b><input type="month" style="width:auto" value="${S.mo}" onchange="setMo(this.value)"></div>`;
+const _d2=dash;dash=()=>{const d=t(),h=_d2().replace(/<button onclick="S\.h=[^>]*>[^<]*<\/button>/,"");return h.replace(`<h2>${d.ls}</h2>`,()=>cmpH()+`<h2>${d.ls}</h2>`)};
+const _r0=render;render=()=>{const ks=Object.keys(S.H||{}).filter(k=>k<S.mo&&(tI(S.H[k])>0||tE(S.H[k])>0)).sort();S.h=ks.length?{v:S.H[ks.pop()].v}:null;_r0()};
+const VM={ar:{nov:"القراءة الصوتية غير متاحة في هذا المتصفح أو الجهاز. جرّب فتح الرابط في Chrome أو Safari.",nov2:"لا يوجد صوت عربي مثبت على جهازك، وقد لا تُسمع القراءة. ثبّت صوتاً من إعدادات الجهاز أو جرّب لغة أخرى.",rd:"جارٍ القراءة…"},fr:{nov:"La lecture vocale n’est pas disponible dans ce navigateur ou cet appareil. Ouvrez le lien dans Chrome ou Safari.",nov2:"Aucune voix pour cette langue n’est installée : la lecture peut rester muette. Installez une voix ou changez de langue.",rd:"Lecture en cours…"},en:{nov:"Voice reading isn’t available in this browser or device. Try opening the link in Chrome or Safari.",nov2:"No voice is installed for this language, so you may hear nothing. Install one in device settings or switch language.",rd:"Reading…"}};
+function vsMsg(m){let e=$("#vs");if(!e){e=document.createElement("div");e.id="vs";e.style.cssText="position:fixed;inset-inline:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;z-index:20;text-align:center";document.body.appendChild(e)}e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",5000)}
+function say(){const d=t(),m=VM[S.lang],ss=window.speechSynthesis;if(!ss||!window.SpeechSynthesisUtterance){vsMsg(m.nov);return}
+const i=I(),e=E(),r=R(),tp=K.map(k=>[k,n(S.v[k])]).filter(x=>x[1]>0).sort((x,y)=>y[1]-x[1]).slice(0,3).map(x=>d.cat[x[0]]).join(", ");
+const tx=`${d.tot}: ${fm(i)}. ${d.yr}: ${fm(i*12)}. ${d.ex}: ${fm(e)}. ${d.rm}: ${fm(r)}. ${tp?d.top+": "+tp+". ":""}${r<0?d.dfc:r>0?d.sur:d.bal}. `+S.pr.map(p=>`${p.n}: ${calc(p).pct}%`).join(". ")+". "+analysis().slice(0,2).join(". ");
+const vs=ss.getVoices(),v=vs.find(x=>x.lang.toLowerCase().startsWith(S.lang));if(!v&&vs.length)vsMsg(m.nov2);
+ss.cancel();const u=new SpeechSynthesisUtterance(tx);if(v){u.voice=v;u.lang=v.lang}else u.lang={ar:"ar-SA",fr:"fr-FR",en:"en-US"}[S.lang];u.rate=S.rate||1;
+u.onstart=()=>{if(v||!vs.length)vsMsg(m.rd)};u.onerror=ev=>{if(ev.error!=="interrupted"&&ev.error!=="canceled")vsMsg(m.nov)};setTimeout(()=>ss.speak(u),150)}
+let DB=null,LP="",CS=0,DP=null,PT=null;
+const SM={ar:["☁ بياناتك محفوظة في حسابك ومتاحة على كل أجهزتك بعد تسجيل الدخول.","⚠ تعذّرت المزامنة: البيانات محفوظة على هذا الجهاز فقط، وستُعاد المحاولة عند عودة الاتصال."],fr:["☁ Vos données sont enregistrées dans votre compte et disponibles sur tous vos appareils après connexion.","⚠ Synchronisation impossible : données enregistrées sur cet appareil uniquement, nouvelle tentative au retour du réseau."],en:["☁ Your data is saved to your account and available on all your devices once signed in.","⚠ Sync failed: data is saved on this device only; it will retry when the connection returns."]};
+const IM={ar:{t:"تثبيت التطبيق",b:"تثبيت الآن",i:"افتح الرابط مباشرة في المتصفح. Android (Chrome): القائمة ⋮ ← «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية». iPhone (Safari): مشاركة ← «إضافة إلى الشاشة الرئيسية». Windows (Edge): القائمة … ← التطبيقات ← «تثبيت هذا الموقع كتطبيق»؛ في Chrome: ⋮ ← «حفظ ومشاركة» ← «تثبيت الصفحة كتطبيق»."},fr:{t:"Installer l’application",b:"Installer maintenant",i:"Ouvrez le lien directement dans le navigateur. Android (Chrome) : menu ⋮ → « Installer l’application » ou « Ajouter à l’écran d’accueil ». iPhone (Safari) : Partager → « Sur l’écran d’accueil ». Windows (Edge) : menu … → Applications → « Installer ce site en tant qu’application » ; (Chrome) : ⋮ → Enregistrer et partager → « Installer la page en tant qu’application »."},en:{t:"Install the app",b:"Install now",i:"Open the link directly in the browser. Android (Chrome): menu ⋮ → “Install app” or “Add to Home screen”. iPhone (Safari): Share → “Add to Home Screen”. Windows (Edge): menu … → Apps → “Install this site as an app”; (Chrome): ⋮ → Save and share → “Install page as app”."}};
+function body(){return JSON.stringify({lang:S.lang,cur:S.cur,inc:S.inc,v:S.v,pr:S.pr,H:S.H,mo:S.mo,rate:S.rate})}
+function push(){if(!DB||!U)return;const b=body();if(b===LP)return;LP=b;S.ts=Date.now();PEND={json:b,ts:S.ts};clearTimeout(PT);PT=setTimeout(flush,1200)}
+function inst(){if(DP){DP.prompt();DP=null;render()}}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();DP=e;render()});
+const _n2=nav;nav=()=>_n2()+`<small class="mu">${SM[S.lang][CS?0:1]}</small>`;
+const _d3=dash;dash=()=>{const m=IM[S.lang];return _d3()+`<details class="c" style="margin-top:20px"><summary><b>📲 ${m.t}</b></summary><p>${m.i}</p>${DP?`<button class="on" onclick="inst()">${m.b}</button>`:""}</details>`};
+/* ===== Authentification Supabase (e-mail + mot de passe, Google) ===== */
+const CFG=window.APP_CONFIG||{},CFGOK=!!(window.supabase&&/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(CFG.SUPABASE_URL||"")&&(CFG.SUPABASE_ANON_KEY||"").length>20&&!/VOTRE/.test(CFG.SUPABASE_ANON_KEY));
+const sb=CFGOK?supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}}):null;
+const RED=()=>location.origin+location.pathname.replace(/index\.html$/,"");
+const GSVG='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+const AT={
+ar:{chk:"جارٍ التحقق من الجلسة…",cfg:"الإعداد ناقص: أدخل رابط Supabase والمفتاح العام في ملف config.js.",in:"تسجيل الدخول",up:"إنشاء حساب",em:"البريد الإلكتروني",pw:"كلمة المرور (8 أحرف على الأقل)",pw2:"تأكيد كلمة المرور",fl:"نسيت كلمة المرور؟",ft:"نسيت كلمة المرور",fs:"إرسال الرابط",rt:"كلمة مرور جديدة",sv:"حفظ",or:"أو",g:"المتابعة باستخدام Google",na:"ليس لديك حساب؟",ha:"لديك حساب؟ سجّل الدخول",bk:"← العودة إلى تسجيل الدخول",e1:"البريد الإلكتروني غير صالح.",e2:"يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",e3:"كلمتا المرور غير متطابقتين.",e4:"تعذّر تنفيذ العملية. تحقق من البيانات وأعد المحاولة.",e5:"البريد الإلكتروني أو كلمة المرور غير صحيحة، أو لم يتم تأكيد البريد.",su:"تم إنشاء الحساب. افتح رابط التأكيد المرسل إلى بريدك ثم سجّل الدخول.",fs2:"إذا كان هناك حساب بهذا البريد، فقد أُرسل إليه رابط إعادة التعيين.",lo:"تسجيل الخروج",lo2:"بعض التعديلات لم تتم مزامنتها بعد وستُفقد. هل تريد تسجيل الخروج؟"},
+fr:{chk:"Vérification de la session…",cfg:"Configuration manquante : renseignez l’URL et la clé publique Supabase dans config.js.",in:"Se connecter",up:"Créer un compte",em:"Adresse e-mail",pw:"Mot de passe (8 caractères minimum)",pw2:"Confirmer le mot de passe",fl:"Mot de passe oublié ?",ft:"Mot de passe oublié",fs:"Envoyer le lien",rt:"Nouveau mot de passe",sv:"Enregistrer",or:"ou",g:"Continuer avec Google",na:"Pas encore de compte ?",ha:"Déjà un compte ? Se connecter",bk:"← Retour à la connexion",e1:"Adresse e-mail invalide.",e2:"Le mot de passe doit contenir au moins 8 caractères.",e3:"Les mots de passe ne correspondent pas.",e4:"Opération impossible. Vérifiez les informations et réessayez.",e5:"E-mail ou mot de passe incorrect, ou e-mail non confirmé.",su:"Compte créé. Ouvrez le lien de confirmation envoyé par e-mail, puis connectez-vous.",fs2:"Si un compte existe pour cette adresse, un lien de réinitialisation vient d’être envoyé.",lo:"Se déconnecter",lo2:"Certaines modifications ne sont pas encore synchronisées et seront perdues. Se déconnecter quand même ?"},
+en:{chk:"Checking your session…",cfg:"Missing setup: enter your Supabase URL and public key in config.js.",in:"Sign in",up:"Create account",em:"Email address",pw:"Password (at least 8 characters)",pw2:"Confirm password",fl:"Forgot your password?",ft:"Forgot password",fs:"Send the link",rt:"New password",sv:"Save",or:"or",g:"Continue with Google",na:"No account yet?",ha:"Already have an account? Sign in",bk:"← Back to sign in",e1:"Invalid email address.",e2:"Password must be at least 8 characters.",e3:"Passwords do not match.",e4:"Could not complete the request. Check the details and try again.",e5:"Wrong email or password, or email not confirmed.",su:"Account created. Open the confirmation link sent to your email, then sign in.",fs2:"If an account exists for this address, a reset link has just been sent.",lo:"Sign out",lo2:"Some changes are not synced yet and will be lost. Sign out anyway?"}};
+const msg=(m,ok)=>{const e=$("#am");if(e){e.textContent=m||"";e.className="err"+(ok?" okm":"")}};
+const goAM=m=>{AM=m;render()};
+function authView(){const L=AT[S.lang],d=t();document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";document.title=d.t;
+const head=`<div class="lang">${["ar","fr","en"].map(l=>`<button class="${S.lang===l?"on":""}" onclick="S.lang='${l}';render()">${{ar:"العربية",fr:"Français",en:"English"}[l]}</button>`).join("")}</div><h1 class="brand"><img src="icons/icon-192.png" alt="" width="40" height="40">${d.t}</h1>`;let b;
+if(CFGOK&&!RECOV&&(CHK||(U&&!READY)))b=`<p class="mu">${L.chk}</p>`;
+else if(!CFGOK)b=`<div class="p neg"><b>${L.cfg}</b></div>`;
+else{const m=AM,up=m==="up",fg=m==="forgot",rs=m==="reset";
+b=`<form class="c auth" onsubmit="doAuth(event)" novalidate><h2 style="margin-top:0">${rs?L.rt:fg?L.ft:up?L.up:L.in}</h2>`
++(rs?"":`<label>${L.em}</label><input name="email" type="email" autocomplete="email" inputmode="email" required>`)
++(fg?"":`<label>${L.pw}</label><input name="password" type="password" autocomplete="${up||rs?"new-password":"current-password"}" required>`)
++(up||rs?`<label>${L.pw2}</label><input name="password2" type="password" autocomplete="new-password" required>`:"")
++`<p id="am" class="err" role="alert"></p><button class="on" id="sb" style="width:100%;padding:11px">${rs?L.sv:fg?L.fs:up?L.up:L.in}</button>`
++(m==="in"?`<p style="margin:10px 0 0"><button type="button" class="lnk" onclick="goAM('forgot')">${L.fl}</button></p>`:"")+`</form>`
++((m==="in"||up)?`<div class="sep">${L.or}</div><button class="gb" onclick="google()">${GSVG}${L.g}</button>`:"")
++`<p style="text-align:center">${m==="in"?`${L.na} <button class="lnk" onclick="goAM('up')">${L.up}</button>`:rs?"":`<button class="lnk" onclick="goAM('in')">${up?L.ha:L.bk}</button>`}</p>`}
+$("#app").innerHTML=head+b}
+async function doAuth(ev){ev.preventDefault();if(BUSY||!sb)return;const L=AT[S.lang],f=ev.target,em=f.email?f.email.value.trim():"",pw=f.password?f.password.value:"";
+if(AM!=="reset"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return msg(L.e1);
+if((AM==="up"||AM==="reset")&&pw.length<8)return msg(L.e2);
+if(AM==="in"&&!pw)return msg(L.e5);
+if((AM==="up"||AM==="reset")&&pw!==f.password2.value)return msg(L.e3);
+BUSY=true;f.querySelector("#sb").disabled=true;msg("");
+try{
+if(AM==="forgot"){await sb.auth.resetPasswordForEmail(em,{redirectTo:RED()});msg(L.fs2,1)}
+else if(AM==="reset"){const r=await sb.auth.updateUser({password:pw});if(r.error)msg(L.e4);else{RECOV=false;AM="in";const s=await sb.auth.getSession();if(s.data&&s.data.session){LU=null;loadUser(s.data.session.user)}else render()}}
+else if(AM==="up"){const r=await sb.auth.signUp({email:em,password:pw,options:{emailRedirectTo:RED()}});if(r.error)msg(L.e4);else if(!r.data.session)msg(L.su,1)}
+else{const r=await sb.auth.signInWithPassword({email:em,password:pw});if(r.error)msg(L.e5)}
+}catch(e){msg(L.e4)}
+BUSY=false;const b2=$("#sb");if(b2)b2.disabled=false}
+async function google(){if(!sb)return;try{const r=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:RED()}});if(r.error)msg(AT[S.lang].e4)}catch(e){msg(AT[S.lang].e4)}}
+async function logout(){if(!sb||!U)return;const ok=await flush();if(!ok&&!confirm(AT[S.lang].lo2))return;const id=U.id;try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem("budget:"+id)}catch(e){}}
+/* ----- données : nettoyage strict de tout ce qui vient du stockage ou du serveur ----- */
+function adopt(o){if(!o||typeof o!=="object")return;const mk=x=>/^\d{4}-\d{2}$/.test(x),nv=v=>{const r={};K.forEach(k=>{r[k]=n(v&&v[k])});return r};
+if(["ar","fr","en"].includes(o.lang))S.lang=o.lang;if(typeof o.cur==="string"&&o.cur.trim())S.cur=o.cur.slice(0,12);
+S.inc=[n(o.inc&&o.inc[0]),n(o.inc&&o.inc[1])];S.v=nv(o.v);
+S.pr=Array.isArray(o.pr)?o.pr.slice(0,200).map(p=>({n:String((p&&p.n)||"").slice(0,120),c:n(p&&p.c),a:n(p&&p.a),m:n(p&&p.m),t:/^\d{4}-\d{2}-\d{2}$/.test(p&&p.t)?p.t:"",p:[0,1,2].includes(+(p&&p.p))?+p.p:0})):[];
+S.H={};if(o.H&&typeof o.H==="object")Object.keys(o.H).filter(mk).slice(0,600).forEach(k=>{const h=o.H[k]||{};S.H[k]={inc:[n(h.inc&&h.inc[0]),n(h.inc&&h.inc[1])],v:nv(h.v)}});
+if(mk(o.mo))S.mo=o.mo;if([.8,1,1.25].includes(+o.rate))S.rate=+o.rate;S.ed=null}
+function resetS(){const l=S.lang;S={lang:l,tab:0,cur:"DA",inc:[0,0],v:{},pr:[],h:null,mo:new Date().toISOString().slice(0,7),ed:null}}
+async function flush(){clearTimeout(PT);if(!DB||!PEND)return true;const p=PEND;try{await DB.set(p);if(PEND===p)PEND=null;return true}catch(e){LP="";return false}}
+async function loadUser(user){if(LU===user.id)return;LU=user.id;U=user;READY=false;CS=0;DB=null;render();
+try{const x=localStorage.getItem("budget:"+U.id);if(x){const o=JSON.parse(x);adopt(o);S.ts=+o.ts||0}}catch(e){}
+try{const r=await sb.from("budgets").select("data").eq("user_id",U.id).maybeSingle();if(r.error)throw r.error;
+const uid=U.id;DB={set:async d=>{const w=await sb.from("budgets").upsert({user_id:uid,data:d,updated_at:new Date().toISOString()});if(w.error)throw w.error}};CS=1;
+const d=r.data&&r.data.data;if(d&&typeof d.json==="string"&&+d.ts>=(S.ts||0)){adopt(JSON.parse(d.json));S.ts=+d.ts;LP=d.json}}
+catch(e){CS=0;DB=null}
+READY=true;render();push()}
+const acct=()=>U?`<div class="c" style="margin:0 0 8px;display:flex;justify-content:space-between;align-items:center;gap:8px"><small style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(U.email||"")}</small><button onclick="logout()">${AT[S.lang].lo}</button></div>`:"";
+const _na=nav;nav=()=>acct()+_na();
+const _ra=render;render=()=>{if(!U||!READY||RECOV){authView();return}_ra()};
+if(sb){sb.auth.onAuthStateChange((ev,ses)=>{setTimeout(()=>{
+if(ev==="PASSWORD_RECOVERY"){RECOV=true;AM="reset";CHK=false;U=null;READY=false;LU=null;render();return}
+if(ev==="SIGNED_OUT"){U=null;READY=false;DB=null;CS=0;LP="";PEND=null;LU=null;RECOV=false;AM="in";CHK=false;resetS();render();return}
+if(ev==="INITIAL_SESSION"||ev==="SIGNED_IN"||ev==="USER_UPDATED"){CHK=false;if(ses&&ses.user&&!RECOV)loadUser(ses.user);else if(!ses)render()}
+},0)});
+addEventListener("online",()=>{if(U&&!CS){const u=U;LU=null;loadUser(u)}});
+addEventListener("pagehide",()=>{flush()});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")flush()})}
+else CHK=false;
+try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")}catch(e){}
+
+render();
+</script></body></html>
